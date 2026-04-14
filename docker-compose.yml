@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: customer_db
+      POSTGRES_USER: customer_user
+      POSTGRES_PASSWORD: customer_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "8002:8000"
+    environment:
+      DB_NAME: customer_db
+      DB_USER: customer_user
+      DB_PASSWORD: customer_password
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+    restart: on-failure
+
+volumes:
+  postgres_data:
